@@ -14,12 +14,13 @@ function displayData() {
 		data.addRow([json[i]['Date'], Number(json[i]['WebSiteViews'])]);
 	}
 
-	// Create Button
+	// Create Buttons
 	var prevButton = document.getElementById('b1');
 	var nextButton = document.getElementById('b2');
 	var changeZoomButton = document.getElementById('b3');
 
 	var options = {
+		title: 'C2C WebSite Viwer Data',
 		width: 800,
 		height: 480,
 		animation: {
@@ -28,7 +29,7 @@ function displayData() {
 		},
 		hAxis: {
 			title: 'Date',
-			viewWindow: {min: 0, max: 5}
+			viewWindow: {min: MAX-5, max: MAX}	// Show Up-to-Date five day's data
 		},
 		vAxis: {
 			title: 'Count'
@@ -52,23 +53,22 @@ function displayData() {
 
 	// Button functions
 	prevButton.onclick = function() {
-		options.hAxis.viewWindow.min -= 1;
-		options.hAxis.viewWindow.max -= 1;
+		options.hAxis.viewWindow.min -= 2;
+		options.hAxis.viewWindow.max -= 2;
 		drawChart();
 	}
 
 	nextButton.onclick = function() {
-			options.hAxis.viewWindow.min += 1;
-			options.hAxis.viewWindow.max += 1;
+			options.hAxis.viewWindow.min += 2;
+			options.hAxis.viewWindow.max += 2;
 			drawChart();
 	}
 
 	var zoomed = false;
-
 	changeZoomButton.onclick = function() {
 		if (zoomed) {
-			options.hAxis.viewWindow.min = 0;
-			options.hAxis.viewWindow.max = 5;
+			options.hAxis.viewWindow.min = MAX-5;
+			options.hAxis.viewWindow.max = MAX;
 		} else {
 			options.hAxis.viewWindow.min = 0;
 			options.hAxis.viewWindow.max = MAX;
