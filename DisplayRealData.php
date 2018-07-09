@@ -49,10 +49,10 @@ get_header(); ?>
 
 		</main><!-- .site-main -->
 	</div><!-- .content-area -->
-	<div id="chart_div"></div>
-	<div id="b1"></div>
-	<div id="b2"></div>
-	<div id="b3"></div>
+	<div id="chart_div" style="margin-left: auto; margin-right: auto;"></div>
+	<button id="b1" disabled="true">Previous</button>
+	<button id="b2" disabled="true">Next</button>
+	<button id="b3">Change Zoom</button>
 
 <?php get_footer(); ?>
 
