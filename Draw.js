@@ -2,23 +2,32 @@ google.charts.load('current', {packages: ['corechart']});
 google.charts.setOnLoadCallback(displayData);
 
 function displayData() {
-	var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+	var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
 	var data = new google.visualization.DataTable();
 	data.addColumn('string', 'Date');
 	data.addColumn('number', 'Viewers');
+	data.addColumn('number', 'Enroll');
+	data.addColumn('number', 'Renew');
+	data.addColumn('number', 'Widthdraw');
 
 	// Build Data Object from JSON
 	var MAX = json.length;
 	for (var i = 0; i < json.length; i++) {
 		//console.log(typeof(json[i]['WebSiteViews']));
-		data.addRow([json[i]['Date'], Number(json[i]['WebSiteViews'])]);
+		data.addRow([json[i]['Date'], 
+					Number(json[i]['WebSiteViews']), 
+					Number(json[i]['Enroll_DailyCount']), 
+					Number(json[i]['Renew_DailyCount']),
+					Number(json[i]['Widthdraw_DailyCount']),
+					]);
 	}
 
 	// Create Buttons
 	var prevButton = document.getElementById('b1');
 	var nextButton = document.getElementById('b2');
 	var changeZoomButton = document.getElementById('b3');
-
+	
+	// Display Options
 	var options = {
 		title: 'C2C WebSite Viwer Data',
 		width: 800,
@@ -33,9 +42,10 @@ function displayData() {
 		},
 		vAxis: {
 			title: 'Count'
-		}
+		},
+		isStacked: true
 	}
-
+	
 	function drawChart() {
 		// Disable buttons while the chart is drawing.
 		prevButton.disabled = true;
@@ -57,13 +67,11 @@ function displayData() {
 		options.hAxis.viewWindow.max -= 2;
 		drawChart();
 	}
-
 	nextButton.onclick = function() {
 			options.hAxis.viewWindow.min += 2;
 			options.hAxis.viewWindow.max += 2;
 			drawChart();
 	}
-
 	var zoomed = false;
 	changeZoomButton.onclick = function() {
 		if (zoomed) {
@@ -76,6 +84,8 @@ function displayData() {
 		zoomed = !zoomed;
 		drawChart();
 	}
-	drawChart();
+	
+	//Initial Display
+	drawChart();	
 }
 
