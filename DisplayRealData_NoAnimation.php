@@ -29,9 +29,8 @@ get_header(); ?>
 			// comments_template();
 			//endif;
 		endwhile;
-
-
 		?>
+		
 		<?php
 		global $wpdb;
 		$records = $wpdb->get_results("SELECT * FROM C2Ctest;");	// Acquire data from Table C2Ctest
@@ -45,37 +44,7 @@ get_header(); ?>
     	</script>
 
 
-    	<?php echo "
-    	<script>
-    		google.charts.load('current', {packages: ['corechart', 'line']});
-			google.charts.setOnLoadCallback(drawBasic);
-			function drawBasic() {
-				
-				var data = new google.visualization.DataTable();
-				data.addColumn('string', 'Date');
-				data.addColumn('number', 'Viewers');
-				
-				for (var i = 0; i < json.length; i++) {
-					//console.log(typeof(json[i]['WebSiteViews']));
-					data.addRow([json[i]['Date'], Number(json[i]['WebSiteViews'])]);
-					
-				}
-
-				var options = {
-					hAxis: {
-					title: 'Date'
-					},
-					vAxis: {
-					title: 'Count'
-					}
-				};
-				
-				var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-				chart.draw(data, options);
-		    }
-		</script>
-		"
-		?>
+    	<script type='text/javascript' src="<?php echo get_template_directory_uri(); ?>/Draw_NoA.js"></script>
 
 		</main><!-- .site-main -->
 	</div><!-- .content-area -->
