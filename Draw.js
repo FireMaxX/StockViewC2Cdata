@@ -2,8 +2,8 @@ google.charts.load('current', {packages: ['corechart']});
 google.charts.setOnLoadCallback(displayData);
 
 function displayData() {
-	var MAX = json.length;
-	var SIZE = 5;
+	var MAX = json.length;	// The index of last date
+	var SIZE = 5;			// How many date will be display at least
 	
 	var chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
 	var data = new google.visualization.DataTable();
@@ -68,18 +68,20 @@ function displayData() {
 				changeZoomButton.disabled = false;
 			});
 		chart.draw(data, options);
+		//console.log(options.hAxis.viewWindow.min);
+		//console.log(options.hAxis.viewWindow.max);
 	}
 
 	// Button functions
 	prevButton.onclick = function() {
-		options.hAxis.viewWindow.min -= 2;
-		options.hAxis.viewWindow.max -= 2;
+		options.hAxis.viewWindow.min -= 1;
+		options.hAxis.viewWindow.max -= 1;
 		drawChart();
 	}
 	nextButton.onclick = function() {
-			options.hAxis.viewWindow.min += 2;
-			options.hAxis.viewWindow.max += 2;
-			drawChart();
+		options.hAxis.viewWindow.min += 1;
+		options.hAxis.viewWindow.max += 1;
+		drawChart();
 	}
 	var zoomed = false;
 	changeZoomButton.onclick = function() {
@@ -98,26 +100,37 @@ function displayData() {
 	document.getElementById('chart_div').onwheel = wheelHandler;
 	function wheelHandler(event) {
 		event = event || window.event;
-		event.preventDefault();	// Prevent father div movement
-		if (event.wheelDelta > 0) {	// Up
-			if ((options.hAxis.viewWindow.min-2) > 0){
-				options.hAxis.viewWindow.min -= 2;
-				options.hAxis.viewWindow.max -= 2;
+		event.preventDefault();	// Avoid page movement
+		if (event.wheelDelta > 0) {	// Scroll up -> Zoom in
+			if ((options.hAxis.viewWindow.max == MAX) 
+				&& ((options.hAxis.viewWindow.max-(options.hAxis.viewWindow.min+2)) >= SIZE))
+			{
+				options.hAxis.viewWindow.min += 2;
 			}
-			else {
-				options.hAxis.viewWindow.min = 0;
-				options.hAxis.viewWindow.max = SIZE;
-				drawChart();
+			else if ((options.hAxis.viewWindow.max == MAX) 
+				&& ((options.hAxis.viewWindow.max-(options.hAxis.viewWindow.min+1)) >= SIZE))
+			{
+				options.hAxis.viewWindow.min += 1;
+			}
+			else if (((options.hAxis.viewWindow.max-1)-(options.hAxis.viewWindow.min+1)) >= SIZE) {
+				options.hAxis.viewWindow.min += 1;
+				options.hAxis.viewWindow.max -= 1;
 			}
 		}
-		else {	// Down -> Next -> Move Right
-			if ((options.hAxis.viewWindow.max+2) < MAX){
-				options.hAxis.viewWindow.min += 2;
-				options.hAxis.viewWindow.max += 2;
+		else {	// Scroll down -> Zoom out
+			if ((options.hAxis.viewWindow.max == MAX)
+				&& ((options.hAxis.viewWindow.min-2) >= 0)) 
+			{
+				options.hAxis.viewWindow.min -=2;
+			}
+			else if ((options.hAxis.viewWindow.max == MAX)
+					&& ((options.hAxis.viewWindow.min-1) >= 0))
+			{
+				options.hAxis.viewWindow.min -= 1;
 			}
 			else {
-				options.hAxis.viewWindow.min = MAX-SIZE;
-				options.hAxis.viewWindow.max = MAX;
+				options.hAxis.viewWindow.min -= 1;
+				options.hAxis.viewWindow.max += 1;
 			}
 		}
 		drawChart();
