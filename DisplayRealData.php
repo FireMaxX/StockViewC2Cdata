@@ -45,7 +45,7 @@ get_header(); ?>
     	</script>
 
 
-    	<script type='text/javascript' src="<?php echo get_template_directory_uri(); ?>/Draw.js"></script>
+    	<script type='text/javascript' src="<?php echo get_template_directory_uri(); ?>/js/Draw.js"></script>
 
 		</main><!-- .site-main -->
 	</div><!-- .content-area -->

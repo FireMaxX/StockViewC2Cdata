@@ -4,6 +4,15 @@ google.charts.setOnLoadCallback(displayData);
 function displayData() {
 	var MAX = json.length;	// The index of last date
 	var SIZE = 5;			// How many date will be display at least
+	var HEI = function (WinHei, WinWid) {
+		return WinHei*0.8;
+	}
+	var WID = function (WinHei, WinWid) {
+		if ((WinWid/WinHei) > 1) {	// Landscape
+			return Math.round(WinWid*0.65);
+		}
+		else {return Math.round(WinWid*0.95);}
+	}
 	
 	var chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
 	var data = new google.visualization.DataTable();
@@ -32,8 +41,8 @@ function displayData() {
 	// Display Options
 	var options = {
 		chart: {title: 'C2C WebSite Viwer Data'},
-		width: 800,
-		height: 480,
+		width: WID(window.innerHeight,window.innerWidth),
+		height: HEI(window.innerHeight,window.innerWidth),
 		animation: {
 			duration: 500,
 			easing: 'in'
@@ -47,6 +56,7 @@ function displayData() {
 			1: {title: '# Viewers'}
 		},
 		isStacked: true,
+		crosshair: { trigger: 'both' },
 		series: {
 			0: {type: 'line', targetAxisIndex: 1},
 			1: {type: 'bars', targetAxisIndex: 0},
@@ -138,5 +148,7 @@ function displayData() {
 	
 	//Initial Display
 	drawChart();	
+	console.log(window.innerHeight);
+	console.log(window.innerWidth);
 }
 
