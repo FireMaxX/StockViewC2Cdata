@@ -106,37 +106,38 @@ function displayData() {
 		drawChart();
 	}
 	
-	//Mouse Scroll functions
-	document.getElementById('chart_div').onwheel = wheelHandler;
-	function wheelHandler(event) {
-		event = event || window.event;
-		event.preventDefault();	// Avoid page movement
-		if (event.wheelDelta > 0) {	// Scroll up -> Zoom in
-			if ((options.hAxis.viewWindow.max == MAX) 
-				&& ((options.hAxis.viewWindow.max-(options.hAxis.viewWindow.min+2)) >= SIZE))
-			{
-				options.hAxis.viewWindow.min += 2;
+	
+	//Mouse Scroll functions - Using jQuery-Mouse-wheel-plug-in
+	var EXTENT = 1;
+	$(document).ready(function(){
+	  $("#chart_div").on('mousewheel', function(event) {
+		if (event.deltaY > 0) {	// Scroll up -> Zoom in
+			EXTENT = Math.abs(deltaY);
+			if (options.hAxis.viewWindow.max == MAX) { // Shrink only at left side
+				// Determine Shrink Scope
+				if ((options.hAxis.viewWindow.max-(options.hAxis.viewWindow.min+EXTENT)) >= SIZE) {
+					options.hAxis.viewWindow.min += EXTENT;
+				}
+				else if ((options.hAxis.viewWindow.max-(options.hAxis.viewWindow.min+1)) >= SIZE)
+				{
+					options.hAxis.viewWindow.min += 1;
+				}
 			}
-			else if ((options.hAxis.viewWindow.max == MAX) 
-				&& ((options.hAxis.viewWindow.max-(options.hAxis.viewWindow.min+1)) >= SIZE))
-			{
-				options.hAxis.viewWindow.min += 1;
-			}
-			else if (((options.hAxis.viewWindow.max-1)-(options.hAxis.viewWindow.min+1)) >= SIZE) {
+			else if (((options.hAxis.viewWindow.max-1)-(options.hAxis.viewWindow.min+1)) >= SIZE) {	// Shrink from both side
 				options.hAxis.viewWindow.min += 1;
 				options.hAxis.viewWindow.max -= 1;
 			}
 		}
 		else {	// Scroll down -> Zoom out
-			if ((options.hAxis.viewWindow.max == MAX)
-				&& ((options.hAxis.viewWindow.min-2) >= 0)) 
-			{
-				options.hAxis.viewWindow.min -=2;
-			}
-			else if ((options.hAxis.viewWindow.max == MAX)
-					&& ((options.hAxis.viewWindow.min-1) >= 0))
-			{
-				options.hAxis.viewWindow.min -= 1;
+			if (options.hAxis.viewWindow.max == MAX) {
+				if ((options.hAxis.viewWindow.min-EXTENT) >= 0) 
+				{
+					options.hAxis.viewWindow.min -=EXTENT;
+				}
+				else if ((options.hAxis.viewWindow.min-1) >= 0)
+				{
+					options.hAxis.viewWindow.min -= 1;
+				}
 			}
 			else {
 				options.hAxis.viewWindow.min -= 1;
@@ -144,11 +145,12 @@ function displayData() {
 			}
 		}
 		drawChart();
-	}
+	  });
+	});
 	
 	//Initial Display
 	drawChart();	
-	console.log(window.innerHeight);
-	console.log(window.innerWidth);
+	//console.log(window.innerHeight);
+	//console.log(window.innerWidth);
 }
 

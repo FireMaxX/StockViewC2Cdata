@@ -19,7 +19,10 @@
 	<script src="<?php echo esc_url( get_template_directory_uri() ); ?>/js/html5.js"></script>
 	<![endif]-->
 	<?php wp_head(); ?>
-	<!--Load the AJAX API, Google Chart Support-->
+	<!--Load jQuery and plugins-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="js/jquery.mousewheel.js"></script>
+	<!--Load Google Chart Support-->
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 </head>
 

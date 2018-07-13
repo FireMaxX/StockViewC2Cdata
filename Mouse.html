@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="jquery.mousewheel.js"></script>
+</head>
+<body>
+    <!--Div that will hold the chart-->
+    <img id="scroll_test" src='https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png'></img>
+	<script>
+	$(document).ready(function(){
+	  $("#scroll_test").on('mousewheel', function(event) {
+		console.log(event.deltaX, event.deltaY, event.deltaFactor);
+	  });
+	});
+	</script>
+</body>
+</html>
