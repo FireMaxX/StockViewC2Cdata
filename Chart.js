@@ -111,8 +111,8 @@ function displayData() {
 	var EXTENT = 1;
 	$(document).ready(function(){
 	  $("#chart_div").on('mousewheel', function(event) {
-		EXTENT = Math.abs(event.deltaY);
 		if (event.deltaY > 0) {	// Scroll up -> Zoom in
+			EXTENT = Math.abs(deltaY);
 			if (options.hAxis.viewWindow.max == MAX) { // Shrink only at left side
 				// Determine Shrink Scope
 				if ((options.hAxis.viewWindow.max-(options.hAxis.viewWindow.min+EXTENT)) >= SIZE) {
