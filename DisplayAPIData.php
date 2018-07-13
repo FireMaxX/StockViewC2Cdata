@@ -1,4 +1,4 @@
-<?php /* Template Name: Data_Display V1.1 Animation */ ?>
+<?php /* Template Name: Data_Display V1.2 API */ ?>
 <?php /* NOTE: Google Chart API loaded at header.php */ ?>
 
 <?php
@@ -29,14 +29,37 @@ get_header(); ?>
 			// comments_template();
 			//endif;
 		endwhile;
-
-
 		?>
+		
 		<?php
-		global $wpdb;
-		$records = $wpdb->get_results("SELECT * FROM C2Ctest;");	// Acquire data from Table C2Ctest
-		$records_json = wp_json_encode($records);
+		$data = array(
+			'token' => '2F387F509692D3CDC8F25DF8CA7A89AA',
+			'content' => 'record',
+			'format' => 'json',
+			'type' => 'flat',
+			'fields' => array('date','enroll_dailycount','renew_dailycount','websiteviews','withdraw_dailycount'),
+			'rawOrLabel' => 'raw',
+			'rawOrLabelHeaders' => 'raw',
+			'exportCheckboxLabel' => 'false',
+			'exportSurveyFields' => 'false',
+			'exportDataAccessGroups' => 'false',
+			'returnFormat' => 'json'
+		);
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, 'https://dmsc.mind.uci.edu/redcap/api/');
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($ch, CURLOPT_VERBOSE, 0);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+		curl_setopt($ch, CURLOPT_AUTOREFERER, true);
+		curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+		curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data, '', '&'));
+		$records_json = curl_exec($ch);
+		curl_close($ch);
 		//echo $records_json;
+		//print_r($records_json);
 		?>
 
 		<script>
@@ -44,7 +67,7 @@ get_header(); ?>
     	</script>
 
 
-    	<script type='text/javascript' src="<?php echo get_template_directory_uri(); ?>/js/Draw.js"></script>
+    	<script type='text/javascript' src="<?php echo get_template_directory_uri(); ?>/js/Chart.js"></script>
 
 		</main><!-- .site-main -->
 	</div><!-- .content-area -->
