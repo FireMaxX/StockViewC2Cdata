@@ -3,19 +3,10 @@ google.charts.setOnLoadCallback(displayData);
 
 function displayData() {
 	var Total = json.length;
-	var SIZE = 5;							// How many date to display on load
-	var Pre_Load_Range = 10;				// How many data to insert on load
+	var Size_Para = 5;						// Increase to load more data at very beginning
+	var SIZE = reSize(Size_Para);			// How many date to display on load
+	var Pre_Load_Range = Size_Para+SIZE;	// How many data to insert on load
 	var Index = Total - Pre_Load_Range;		// Index of Left-Most record
-	
-	var HEI = function (WinHei, WinWid) {
-		return WinHei*0.8;
-	}
-	var WID = function (WinHei, WinWid) {
-		if ((WinWid/WinHei) > 1) {	// Landscape View
-			return Math.round(WinWid*0.65);
-		}
-		else {return Math.round(WinWid*0.95);}
-	}
 	
 	// Initialize Data Structure
 	var chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
@@ -45,8 +36,6 @@ function displayData() {
 	// Display Options
 	var options = {
 		chart: {title: 'C2C WebSite Viwer Data'},
-		width: WID(window.innerHeight,window.innerWidth),
-		height: HEI(window.innerHeight,window.innerWidth),
 		animation: {
 			duration: 500,
 			easing: 'in'
@@ -95,8 +84,18 @@ function displayData() {
 				changeZoomButton.disabled = false;
 			});
 		chart.draw(data, options);
-		//console.log(options.hAxis.viewWindow.min);
-		//console.log(options.hAxis.viewWindow.max);
+	}
+	
+	// Auto-Adjust Drawing Options
+	function reSize(default_size){
+		var HEI = document.getElementById('chart_div').offsetHeight;
+		var WID = document.getElementById('chart_div').offsetWidth;
+		var RATIO = WID/HEI;
+		if (RATIO > 1) {	// Landscape
+			size = default_size + Math.round(WID/HEI)*4;
+		}
+		else { size = default_size;}
+		return size;
 	}
 
 	// Button functions
@@ -110,7 +109,6 @@ function displayData() {
 		options.hAxis.viewWindow.max += 1;
 		drawChart();
 	}
-	
 	var zoomed = false;
 	changeZoomButton.onclick = function() {
 		loadMore(Total-MAX);
@@ -126,53 +124,58 @@ function displayData() {
 	}
 	
 	
-	//Mouse Scroll functions - Using jQuery-Mouse-wheel-plug-in
+	///// onLoad Page /////
 	var EXTENT = 1;
 	$(document).ready(function(){
-	  $("#chart_div").on('mousewheel', function(event) {
-		EXTENT = Math.abs(event.deltaY);
-		if (event.deltaY > 0) {	// Scroll up -> Zoom in
-			// Shrink only at left side
-			if (options.hAxis.viewWindow.max == MAX) { 
-				// Determine Shrink Scope
-				if ((options.hAxis.viewWindow.max-(options.hAxis.viewWindow.min+EXTENT)) >= SIZE) {
+		//Mouse Scroll functions - Using jQuery-Mouse-wheel-plug-in
+		$("#chart_div").on('mousewheel', function(event) {
+			EXTENT = Math.abs(event.deltaY)*5;
+			if (event.deltaY > 0) {	// Scroll up -> Zoom in
+				// Shrink only at left side
+				if (options.hAxis.viewWindow.max == MAX) { 
+					// Determine Shrink Scope
+					if ((options.hAxis.viewWindow.max-(options.hAxis.viewWindow.min+EXTENT)) >= SIZE) {
+						options.hAxis.viewWindow.min += EXTENT;
+					}
+					else if ((options.hAxis.viewWindow.max-(options.hAxis.viewWindow.min+1)) >= SIZE)
+					{
+						options.hAxis.viewWindow.min += 1;
+					}
+				}
+				else if (((options.hAxis.viewWindow.max-EXTENT)-(options.hAxis.viewWindow.min+EXTENT)) >= SIZE) {	// Shrink from both side
 					options.hAxis.viewWindow.min += EXTENT;
+					options.hAxis.viewWindow.max -= EXTENT;
 				}
-				else if ((options.hAxis.viewWindow.max-(options.hAxis.viewWindow.min+1)) >= SIZE)
-				{
+				else if (((options.hAxis.viewWindow.max-1)-(options.hAxis.viewWindow.min+1)) >= SIZE){
 					options.hAxis.viewWindow.min += 1;
+					options.hAxis.viewWindow.max -= 1;	
 				}
 			}
-			else if (((options.hAxis.viewWindow.max-1)-(options.hAxis.viewWindow.min+1)) >= SIZE) {	// Shrink from both side
-				options.hAxis.viewWindow.min += 1;
-				options.hAxis.viewWindow.max -= 1;
-			}
-		}
-		else {	// Scroll down -> Zoom out
-			if (MAX < Total) {
-				loadMore(EXTENT);
-			}
-			options.hAxis.viewWindow.max += EXTENT;
-			
-			if (options.hAxis.viewWindow.max == MAX) {
-				options.hAxis.viewWindow.min -= EXTENT;
-			}
-			else {
-				options.hAxis.viewWindow.min -= EXTENT;
+			else {	// Scroll down -> Zoom out
+				if (MAX < Total) {
+					loadMore(EXTENT);
+				}
 				options.hAxis.viewWindow.max += EXTENT;
+				
+				if (options.hAxis.viewWindow.max == MAX) {
+					options.hAxis.viewWindow.min -= EXTENT;
+				}
+				else {
+					options.hAxis.viewWindow.min -= EXTENT;
+					options.hAxis.viewWindow.max += EXTENT;
+				}
+				
+				if (options.hAxis.viewWindow.min < 0) {
+					options.hAxis.viewWindow.min = 0;
+				}
+				if (options.hAxis.viewWindow.max > MAX) {
+					options.hAxis.viewWindow.max = MAX;
+				}
 			}
-			
-			if (options.hAxis.viewWindow.min < 0) {
-				options.hAxis.viewWindow.min = 0;
-			}
-			if (options.hAxis.viewWindow.max > MAX) {
-				options.hAxis.viewWindow.max = MAX;
-			}
-		}
-		console.log(options.hAxis.viewWindow.max);
-		console.log(MAX);
-		drawChart();
-	  });
+			console.log(options.hAxis.viewWindow.max);
+			console.log(MAX);
+			drawChart();
+		});
 	});
 	
 	//Initial Display

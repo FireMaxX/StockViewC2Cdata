@@ -5,9 +5,8 @@
 <script src="./js/jquery.mousewheel.js"></script>
 <!--Load Google Chart Support-->
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-
 	<div id="primary" class="content-area">
-		<div id="chart_div" align="center"></div>
+		<div id="chart_div" style="width:95%; height:95%"></div>
 		<div id="button_div" align="center">
 			<button id="b1" disabled="true">Previous</button>
 			<button id="b2" disabled="true">Next</button>
@@ -55,5 +54,12 @@
 		</main><!-- .site-main -->
 	</div><!-- .content-area -->
 	
+	<style>
+	#chart_div
+	{
+		margin-left: auto;
+		margin-right: auto;
+	}
+	</style>
 	
 
