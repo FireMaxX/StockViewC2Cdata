@@ -2,18 +2,22 @@ google.charts.load('current', {packages: ['corechart']});
 google.charts.setOnLoadCallback(displayData);
 
 function displayData() {
-	var MAX = json.length;	// The index of last date
-	var SIZE = 5;			// How many date will be display at least
+	var Total = json.length;
+	var SIZE = 5;							// How many date to display on load
+	var Pre_Load_Range = 10;				// How many data to insert on load
+	var Index = Total - Pre_Load_Range;		// Index of Left-Most record
+	
 	var HEI = function (WinHei, WinWid) {
 		return WinHei*0.8;
 	}
 	var WID = function (WinHei, WinWid) {
-		if ((WinWid/WinHei) > 1) {	// Landscape
+		if ((WinWid/WinHei) > 1) {	// Landscape View
 			return Math.round(WinWid*0.65);
 		}
 		else {return Math.round(WinWid*0.95);}
 	}
 	
+	// Initialize Data Structure
 	var chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
 	var data = new google.visualization.DataTable();
 	data.addColumn('string', 'Date');
@@ -23,8 +27,7 @@ function displayData() {
 	data.addColumn('number', 'Widthdraw'); 
 
 	// Build Data Object from JSON
-	for (var i = 0; i < json.length; i++) {
-		//console.log(typeof(json[i]['websiteviews']));
+	for (var i = Index; i < Total; i++) {
 		data.addRow([json[i]['date'], 
 					Number(json[i]['websiteviews']), 
 					Number(json[i]['enroll_dailycount']), 
@@ -32,7 +35,8 @@ function displayData() {
 					Number(json[i]['withdraw_dailycount']),
 					]);
 	}
-
+	var MAX = data.getNumberOfRows();	// Max Index
+	
 	// Create Buttons
 	var prevButton = document.getElementById('b1');
 	var nextButton = document.getElementById('b2');
@@ -63,6 +67,19 @@ function displayData() {
 			2: {type: 'bars', targetAxisIndex: 0},
 			3: {type: 'bars', targetAxisIndex: 0}			
 		}
+	}
+	
+	function loadMore(number) {
+		for (var i = 0; i <  number; i++) {
+			Index = Index - 1;
+			data.insertRows(0,[[json[Index]['date'], 
+					Number(json[Index]['websiteviews']), 
+					Number(json[Index]['enroll_dailycount']), 
+					Number(json[Index]['renew_dailycount']),
+					Number(json[Index]['withdraw_dailycount']),
+					]]);
+		}
+		MAX = data.getNumberOfRows();
 	}
 	
 	function drawChart() {
@@ -113,7 +130,8 @@ function displayData() {
 	  $("#chart_div").on('mousewheel', function(event) {
 		EXTENT = Math.abs(event.deltaY);
 		if (event.deltaY > 0) {	// Scroll up -> Zoom in
-			if (options.hAxis.viewWindow.max == MAX) { // Shrink only at left side
+			// Shrink only at left side
+			if (options.hAxis.viewWindow.max == MAX) { 
 				// Determine Shrink Scope
 				if ((options.hAxis.viewWindow.max-(options.hAxis.viewWindow.min+EXTENT)) >= SIZE) {
 					options.hAxis.viewWindow.min += EXTENT;
@@ -129,21 +147,28 @@ function displayData() {
 			}
 		}
 		else {	// Scroll down -> Zoom out
+			if (MAX < Total) {
+				loadMore(EXTENT);
+			}
+			options.hAxis.viewWindow.max += EXTENT;
+			
 			if (options.hAxis.viewWindow.max == MAX) {
-				if ((options.hAxis.viewWindow.min-EXTENT) >= 0) 
-				{
-					options.hAxis.viewWindow.min -=EXTENT;
-				}
-				else if ((options.hAxis.viewWindow.min-1) >= 0)
-				{
-					options.hAxis.viewWindow.min -= 1;
-				}
+				options.hAxis.viewWindow.min -= EXTENT;
 			}
 			else {
-				options.hAxis.viewWindow.min -= 1;
-				options.hAxis.viewWindow.max += 1;
+				options.hAxis.viewWindow.min -= EXTENT;
+				options.hAxis.viewWindow.max += EXTENT;
+			}
+			
+			if (options.hAxis.viewWindow.min < 0) {
+				options.hAxis.viewWindow.min = 0;
+			}
+			if (options.hAxis.viewWindow.max > MAX) {
+				options.hAxis.viewWindow.max = MAX;
 			}
 		}
+		console.log(options.hAxis.viewWindow.max);
+		console.log(MAX);
 		drawChart();
 	  });
 	});
