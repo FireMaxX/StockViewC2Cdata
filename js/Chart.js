@@ -45,11 +45,18 @@ function displayData() {
 			viewWindow: {min: MAX-SIZE, max: MAX}	// Show Up-to-Date five day's data
 		},
 		vAxes: {
-			0: {title: '# Enrollee'},
-			1: {title: '# Viewers'}
+			0: {
+				title: '# Enrollee',
+			},
+			1: {
+				title: '# Viewers',
+				gridlines: {
+					count:6
+				}
+			}
 		},
 		isStacked: true,
-		crosshair: { trigger: 'both' },
+		crosshair: {trigger: 'both'},
 		series: {
 			0: {type: 'line', targetAxisIndex: 1},
 			1: {type: 'bars', targetAxisIndex: 0},
@@ -61,12 +68,14 @@ function displayData() {
 	function loadMore(number) {
 		for (var i = 0; i <  number; i++) {
 			Index = Index - 1;
-			data.insertRows(0,[[json[Index]['date'], 
+			if (Index >= 0) {
+				data.insertRows(0,[[json[Index]['date'], 
 					Number(json[Index]['websiteviews']), 
 					Number(json[Index]['enroll_dailycount']), 
 					Number(json[Index]['renew_dailycount']),
 					Number(json[Index]['withdraw_dailycount']),
-					]]);
+				]]);
+			}
 		}
 		MAX = data.getNumberOfRows();
 	}
@@ -111,7 +120,6 @@ function displayData() {
 	}
 	var zoomed = false;
 	changeZoomButton.onclick = function() {
-		loadMore(Total-MAX);
 		if (zoomed) {
 			options.hAxis.viewWindow.min = MAX-SIZE;
 			options.hAxis.viewWindow.max = MAX;
@@ -129,7 +137,7 @@ function displayData() {
 	$(document).ready(function(){
 		//Mouse Scroll functions - Using jQuery-Mouse-wheel-plug-in
 		$("#chart_div").on('mousewheel', function(event) {
-			EXTENT = Math.abs(event.deltaY)*5;
+			EXTENT = Math.abs(event.deltaY)*4;
 			if (event.deltaY > 0) {	// Scroll up -> Zoom in
 				// Shrink only at left side
 				if (options.hAxis.viewWindow.max == MAX) { 
@@ -176,6 +184,22 @@ function displayData() {
 			console.log(MAX);
 			drawChart();
 		});
+		
+		/*
+		var mouse_x, mouse_y;
+		$("#chart_div").mousedown(function(event) {
+			mouse_x = event.pageX;
+		});
+		$("#chart_div").mouseup(function(event) {
+			var new_X = event.pageX;
+			if (new_X < mouse_x) {
+				moveForward();
+			}
+			else if (new_X > mouse_x) {
+				moveBackward();
+			}
+		});
+		*/
 	});
 	
 	//Initial Display
