@@ -110,8 +110,10 @@ function displayData() {
 		options.hAxis.viewWindow.max += 1;
 		drawChart();
 	}
+	
 	var zoomed = false;
 	changeZoomButton.onclick = function() {
+		loadMore(Total-MAX);
 		if (zoomed) {
 			options.hAxis.viewWindow.min = MAX-SIZE;
 			options.hAxis.viewWindow.max = MAX;
