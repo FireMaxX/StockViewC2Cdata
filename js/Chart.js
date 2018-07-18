@@ -1,5 +1,4 @@
-google.charts.load('current', {packages: ['corechart','controls']});
-//google.charts.load('current', {'packages':['line']});
+google.charts.load('current', {packages: ['corechart']});
 google.charts.setOnLoadCallback(displayData);
 
 function displayData() {
@@ -17,6 +16,7 @@ function displayData() {
 	data.addColumn('number', 'Enroll');
 	data.addColumn('number', 'Renew');
 	data.addColumn('number', 'Widthdraw'); 
+	var hide = new Array(-1,-1,-1,-1,-1);
 
 	// Build Data Object from JSON
 	for (var i = Index; i < Total; i++) {
@@ -28,6 +28,7 @@ function displayData() {
 					]);
 	}
 	var MAX = data.getNumberOfRows();	// Max Index
+	var view = new google.visualization.DataView(data);	// Create read-only DataView instance
 	
 	// Create Buttons
 	var prevButton = document.getElementById('b1');
@@ -56,13 +57,19 @@ function displayData() {
 				}
 			}
 		},
-		crosshair: {trigger: 'both'},
+		crosshair: {trigger: 'focus'},
 		series: {
-			0: {targetAxisIndex: 1},
-			1: {targetAxisIndex: 0},
-			2: {targetAxisIndex: 0},
-			3: {targetAxisIndex: 0}			
+			0: {color: '#1c91c0', targetAxisIndex: 1},
+			1: {color: '#f4bc06', targetAxisIndex: 0},
+			2: {color: '#6f9654', targetAxisIndex: 0},
+			3: {color: '#f40707', targetAxisIndex: 0}			
 		}
+	}
+	
+	function getNewDataView(){
+		MAX = data.getNumberOfRows();
+		view = new google.visualization.DataView(data);
+		view.hideColumns(hide);
 	}
 	
 	function loadMore(number) {
@@ -77,7 +84,7 @@ function displayData() {
 				]]);
 			}
 		}
-		MAX = data.getNumberOfRows();
+		//getNewDataView();
 	}
 	
 	function drawChart() {
@@ -92,7 +99,8 @@ function displayData() {
 				nextButton.disabled = options.hAxis.viewWindow.max >= MAX;
 				changeZoomButton.disabled = false;
 			});
-		chart.draw(data, options);
+		getNewDataView();
+		chart.draw(view, options);
 	}
 	
 	// Auto-Adjust Drawing Options
