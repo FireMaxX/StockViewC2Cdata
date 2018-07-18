@@ -1,5 +1,4 @@
-google.charts.load('current', {packages: ['corechart','controls']});
-//google.charts.load('current', {'packages':['line']});
+google.charts.load('current', {packages: ['corechart']});
 google.charts.setOnLoadCallback(displayData);
 
 function displayData() {
@@ -10,7 +9,7 @@ function displayData() {
 	var Index = Total - Pre_Load_Range;		// Index of Left-Most record
 	
 	// Initialize Data Structure
-	var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+	var chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
 	var data = new google.visualization.DataTable();
 	data.addColumn('string', 'Date');
 	data.addColumn('number', 'Viewers');
@@ -52,16 +51,17 @@ function displayData() {
 			1: {
 				title: '# Viewers',
 				gridlines: {
-					count:10
+					count:6
 				}
 			}
 		},
+		isStacked: true,
 		crosshair: {trigger: 'both'},
 		series: {
-			0: {targetAxisIndex: 1},
-			1: {targetAxisIndex: 0},
-			2: {targetAxisIndex: 0},
-			3: {targetAxisIndex: 0}			
+			0: {type: 'line', targetAxisIndex: 1},
+			1: {type: 'bars', targetAxisIndex: 0},
+			2: {type: 'bars', targetAxisIndex: 0},
+			3: {type: 'bars', targetAxisIndex: 0}			
 		}
 	}
 	
