@@ -37,7 +37,7 @@ function displayData() {
 					Number(json[i]['start_totalcount'])
 					]);
 	}
-	var MAX = data.getNumberOfRows();	// Max Index
+	var MAX = data.getNumberOfRows();	// Right-Most Index + 1
 	var view = new google.visualization.DataView(data);	// Create read-only DataView instance
 	
 	// Create Buttons
@@ -48,16 +48,17 @@ function displayData() {
 	
 	// Display Options
 	var options = {
-		chart: {title: 'C2C WebSite Viwer Data'},
+		title: 'C2C WebSite Viwer Data',
+		legend: {position: 'top'},
 		animation: {
 			duration: 500,
 			easing: 'in'
 		},
 		hAxis: {
 			title: 'Date',
-			viewWindow: {min: MAX-SIZE, max: MAX}	// Show Up-to-Date five day's data
+			viewWindow: {min: MAX-SIZE, max: MAX}	// Display [min, max)
 		},
-		crosshair: {trigger: 'focus'}
+		crosshair: {trigger: 'both'}
 	}
 	
 	function loadMore(number) {
@@ -82,7 +83,6 @@ function displayData() {
 	}
 	
 	function drawChart() {
-		//console.log("drawChart");
 		// Disable buttons while the chart is drawing.
 		prevButton.disabled = true;
 		nextButton.disabled = true;
@@ -95,6 +95,9 @@ function displayData() {
 				changeZoomButton.disabled = false;
 			});
 		getNewDataView();
+		console.log(options.hAxis.viewWindow.min);
+		console.log(options.hAxis.viewWindow.max);
+		console.log(data.getNumberOfRows());
 		chart.draw(view, options);
 	}
 	
@@ -159,11 +162,9 @@ function displayData() {
 		drawChart();
 	}
 	
-	
-	///// onLoad Page /////
+	// Mouse Scroll functions - Using jQuery-Mouse-wheel-plug-in
 	var EXTENT = 1;
 	$(document).ready(function(){
-		//Mouse Scroll functions - Using jQuery-Mouse-wheel-plug-in
 		$("#chart_div").on('mousewheel', function(event) {
 			EXTENT = Math.abs(event.deltaY)*4;
 			if (event.deltaY > 0) {	// Scroll up -> Zoom in
@@ -188,17 +189,18 @@ function displayData() {
 				}
 			}
 			else {	// Scroll down -> Zoom out
-				if (MAX < Total) {
+				if ((MAX < Total) && (options.hAxis.viewWindow.min < EXTENT*2)) {
 					loadMore(EXTENT);
-				}
-				options.hAxis.viewWindow.max += EXTENT;
-				
-				if (options.hAxis.viewWindow.max == MAX) {
-					options.hAxis.viewWindow.min -= EXTENT;
-				}
-				else {
-					options.hAxis.viewWindow.min -= EXTENT;
 					options.hAxis.viewWindow.max += EXTENT;
+					options.hAxis.viewWindow.min += EXTENT;
+				}
+		
+				if (options.hAxis.viewWindow.max == MAX) {	// Show more on the left of x-axis
+					options.hAxis.viewWindow.min -= EXTENT;
+				}
+				else {	// Show more on both side
+					options.hAxis.viewWindow.min -= EXTENT/2;
+					options.hAxis.viewWindow.max += EXTENT/2;
 				}
 				
 				if (options.hAxis.viewWindow.min < 0) {
@@ -208,8 +210,6 @@ function displayData() {
 					options.hAxis.viewWindow.max = MAX;
 				}
 			}
-			//console.log(options.hAxis.viewWindow.max);
-			//console.log(MAX);
 			drawChart();
 		});
 		
