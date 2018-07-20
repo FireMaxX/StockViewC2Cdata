@@ -6,7 +6,7 @@
 <!--Load Google Chart Support-->
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 	<div id="dashboard_div">
-		<div id="chart_div" style="width:95%; height:95%"></div>
+		<div id="chart_div" style="width:95%; height:90%"></div>
 		<div id="check_box_Upper" align="center">
 			<label><input id="websiteviews" type="checkbox" name="display_select" value = "1" checked="checked" />Website Viewers</label>
 			<label><input id="enroll_dailycount" type="checkbox" name="display_select" value = "2" />Daily Enroll</label>

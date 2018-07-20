@@ -4,8 +4,8 @@ google.charts.setOnLoadCallback(displayData);
 function displayData() {
 	var Total = json.length;
 	var Size_Para = 5;						// Increase to load more data at very beginning
-	var SIZE = reSize(Size_Para);			// How many date to display on load
-	var Pre_Load_Range = Size_Para+SIZE;	// How many data to insert on load
+	var SIZE = reSize(Size_Para);			// How many date to display onLoad (min Range Size)
+	var Pre_Load_Range = Size_Para+SIZE;	// How many data to insert onLoad
 	var Index = Total - Pre_Load_Range;		// Index of Left-Most record
 	
 	// Initialize Data Structure
@@ -61,27 +61,6 @@ function displayData() {
 		crosshair: {trigger: 'both'}
 	}
 	
-	function loadMore(number) {
-		//console.log("loadMore");
-		for (var i = 0; i <  number; i++) {
-			Index = Index - 1;
-			if (Index >= 0) {
-				data.insertRows(0,[[json[Index]['date'], 
-					Number(json[Index]['websiteviews']), 
-					Number(json[Index]['enroll_dailycount']), 
-					Number(json[Index]['renew_dailycount']),
-					Number(json[Index]['withdraw_dailycount']),
-					Number(json[Index]['enroll_totalcount']), 
-					Number(json[Index]['renew_totalcount']), 
-					Number(json[Index]['withdraw_totalcount']),
-					Number(json[Index]['start_dailycount']),
-					Number(json[Index]['start_totalcount'])
-				]]);
-			}
-		}
-		MAX = data.getNumberOfRows();
-	}
-	
 	function drawChart() {
 		// Disable buttons while the chart is drawing.
 		prevButton.disabled = true;
@@ -95,41 +74,32 @@ function displayData() {
 				changeZoomButton.disabled = false;
 			});
 		getNewDataView();
-		console.log(options.hAxis.viewWindow.min);
-		console.log(options.hAxis.viewWindow.max);
-		console.log(data.getNumberOfRows());
 		chart.draw(view, options);
-	}
-	
-	// Auto-Adjust Drawing Options
-	function reSize(default_size){
-		//console.log("resize");
-		var HEI = document.getElementById('chart_div').offsetHeight;
-		var WID = document.getElementById('chart_div').offsetWidth;
-		var RATIO = WID/HEI;
-		if (RATIO > 1) {	// Landscape
-			size = default_size + Math.round(WID/HEI)*4;
-		}
-		else { size = default_size;}
-		return size;
 	}
 
 	// Button functions
-	prevButton.onclick = function moveForward() {
-		//console.log("MoveForward");
-		options.hAxis.viewWindow.min -= 1;
-		options.hAxis.viewWindow.max -= 1;
+	function moveBackward(num) {
+		options.hAxis.viewWindow.min += num;
+		options.hAxis.viewWindow.max += num;
+		validateIndex();
 		drawChart();
 	}
-	nextButton.onclick = function moveBackward() {
-		//console.log("MoveBackward");
-		options.hAxis.viewWindow.min += 1;
-		options.hAxis.viewWindow.max += 1;
+	function moveForward(num) {
+		options.hAxis.viewWindow.min -= num;
+		options.hAxis.viewWindow.max -= num;
+		validateIndex();
 		drawChart();
 	}
+	
+	prevButton.onclick = function(){
+		moveForward(1);
+	}
+	nextButton.onclick = function() {
+		moveBackward(1);
+	}
+	
 	var zoomed = false;
 	changeZoomButton.onclick = function showAll() {
-		//console.log("ShowAll");
 		loadMore(Total-MAX);
 		if (zoomed) {
 			options.hAxis.viewWindow.min = MAX-SIZE;
@@ -142,27 +112,17 @@ function displayData() {
 		drawChart();
 	}
 	
-	// Add/Hide Data Category and Refresh Display
-	function getNewDataView(){
-		//console.log("getNewDataView");
-		MAX = data.getNumberOfRows();
-		view = new google.visualization.DataView(data);
-		view.hideColumns(hide);
-	}
-	
 	refreshButton.onclick = function selectDisplay() {
-		//console.log("selectDisplay");
 		var cb = document.getElementsByName('display_select');
 		var temp = new Array();
 		for (var i=0; i<cb.length; i++) {
 			if (!(cb[i].checked)) { temp.push(Number(cb[i].value)); }
 		}
-		//console.log(temp);
 		hide = temp;
 		drawChart();
 	}
 	
-	// Mouse Scroll functions - Using jQuery-Mouse-wheel-plug-in
+	// Mouse Scroll functions (using jQuery_Mouse_Wheel plug in)
 	var EXTENT = 1;
 	$(document).ready(function(){
 		$("#chart_div").on('mousewheel', function(event) {
@@ -201,36 +161,91 @@ function displayData() {
 				else {	// Show more on both side
 					options.hAxis.viewWindow.min -= EXTENT/2;
 					options.hAxis.viewWindow.max += EXTENT/2;
-				}
-				
-				if (options.hAxis.viewWindow.min < 0) {
-					options.hAxis.viewWindow.min = 0;
-				}
-				if (options.hAxis.viewWindow.max > MAX) {
-					options.hAxis.viewWindow.max = MAX;
-				}
+				}	
 			}
+			validateIndex();
 			drawChart();
 		});
 		
-		/*
-		var mouse_x, mouse_y;
+		// Mouse Drag functions
+		var mouse_X;
 		$("#chart_div").mousedown(function(event) {
-			mouse_x = event.pageX;
+			mouse_X = event.pageX;
 		});
 		$("#chart_div").mouseup(function(event) {
 			var new_X = event.pageX;
-			if (new_X < mouse_x) {
-				moveForward();
+			var total_X = document.getElementById('chart_div').offsetWidth;
+			var offset = Math.round(Math.abs(Math.round(new_X-mouse_X))/(total_X/(SIZE-1)))+1;
+				
+			if (new_X < mouse_X) {
+				moveBackward(offset);
 			}
-			else if (new_X > mouse_x) {
-				moveBackward();
+			else if (new_X > mouse_X) {
+				moveForward(offset);
+				if ((MAX < Total) && (options.hAxis.viewWindow.min < offset)) {
+					loadMore(offset);
+					options.hAxis.viewWindow.max += offset;
+					options.hAxis.viewWindow.min += offset;
+				}
 			}
 		});
-		*/
 	});
 	
-	//Initial Display
+/* -------------- Utility Functions -------------- */	
+	// (Auto-Response) ReSize Chart onLoad
+	function reSize(default_size){
+		var HEI = document.getElementById('chart_div').offsetHeight;
+		var WID = document.getElementById('chart_div').offsetWidth;
+		var RATIO = WID/HEI;
+		if (RATIO > 1) {	// Landscape
+			size = default_size + Math.round(WID/HEI)*4;
+		}
+		else { size = default_size;}
+		return size;
+	}
+	
+	// Add/Hide Data Category and Refresh Display
+	function getNewDataView(){
+		MAX = data.getNumberOfRows();
+		view = new google.visualization.DataView(data);
+		view.hideColumns(hide);
+	}
+	
+	// Ensure Index within Valid Range
+	function validateIndex(){
+		if (options.hAxis.viewWindow.min < 0) {
+			options.hAxis.viewWindow.min = 0;
+		}
+		if (options.hAxis.viewWindow.max > MAX) {
+			options.hAxis.viewWindow.max = MAX;
+		}
+		if ((options.hAxis.viewWindow.max-options.hAxis.viewWindow.min)<SIZE) {
+			options.hAxis.viewWindow.min=options.hAxis.viewWindow.max-SIZE;
+		}
+	}
+	
+	// Load more records from Database(JSON)
+	function loadMore(number) {
+		for (var i = 0; i <  number; i++) {
+			Index = Index - 1;
+			if (Index >= 0) {
+				data.insertRows(0,[[json[Index]['date'], 
+					Number(json[Index]['websiteviews']), 
+					Number(json[Index]['enroll_dailycount']), 
+					Number(json[Index]['renew_dailycount']),
+					Number(json[Index]['withdraw_dailycount']),
+					Number(json[Index]['enroll_totalcount']), 
+					Number(json[Index]['renew_totalcount']), 
+					Number(json[Index]['withdraw_totalcount']),
+					Number(json[Index]['start_dailycount']),
+					Number(json[Index]['start_totalcount'])
+				]]);
+			}
+		}
+		MAX = data.getNumberOfRows();
+	}
+	
+	/* -------------- Initial Display -------------- */
 	drawChart();	
 	//console.log(window.innerHeight);
 	//console.log(window.innerWidth);
