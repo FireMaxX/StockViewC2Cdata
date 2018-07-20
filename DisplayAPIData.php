@@ -7,10 +7,22 @@
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 	<div id="dashboard_div">
 		<div id="chart_div" style="width:95%; height:95%"></div>
+		<form id="check_box" align="center">
+			<label><input id="websiteviews" type="checkbox" name="display_select" value = "1" checked="checked" />Website Viewers</label>
+			<label><input id="enroll_dailycount" type="checkbox" name="display_select" value = "2" />Daily Enroll</label>
+			<label><input id="renew_dailycount" type="checkbox" name="display_select" value = "3" />Daily Renew</label>
+			<label><input id="withdraw_dailycount" type="checkbox" name="display_select" value = "4" />Daily Withdraw</label>
+			<label><input id="withdraw_totalcount" type="checkbox" name="display_select" value = "8" />Daily Start</label>
+			<label><input id="enroll_totalcount" type="checkbox" name="display_select" value = "5" />Total Enroll</label>
+			<label><input id="renew_totalcount" type="checkbox" name="display_select" value = "6" />Total Renew</label>
+			<label><input id="withdraw_totalcount" type="checkbox" name="display_select" value = "7" />Total Withdraw</label>
+			<label><input id="withdraw_totalcount" type="checkbox" name="display_select" value = "9" />Total Start</label>
+		<form>
 		<div id="button_div" align="center">
-			<button id="b1" disabled="true">Previous</button>
-			<button id="b2" disabled="true">Next</button>
-			<button id="b3">Change Zoom</button>
+			<button type="button" id="b1" >Previous</button>
+			<button type="button" id="b2" disabled="true">Next</button>
+			<button type="button" id="b4">Refresh</button>
+			<button type="button" id="b3">Change Zoom</button>
 		</div>
 		<main id="main" class="site-main" role="main">
 
@@ -20,7 +32,7 @@
 				'content' => 'record',
 				'format' => 'json',
 				'type' => 'flat',
-				'fields' => array('date','enroll_dailycount','renew_dailycount','websiteviews','withdraw_dailycount'),
+				'fields' => array('date','websiteviews','enroll_dailycount','enroll_totalcount','renew_dailycount','renew_totalcount','withdraw_dailycount','withdraw_totalcount','start_dailycount','start_totalcount'),
 				'rawOrLabel' => 'raw',
 				'rawOrLabelHeaders' => 'raw',
 				'exportCheckboxLabel' => 'false',

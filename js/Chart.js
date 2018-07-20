@@ -15,8 +15,13 @@ function displayData() {
 	data.addColumn('number', 'Viewers');
 	data.addColumn('number', 'Enroll');
 	data.addColumn('number', 'Renew');
-	data.addColumn('number', 'Widthdraw'); 
-	var hide = new Array(-1,-1,-1,-1,-1);
+	data.addColumn('number', 'Widthdraw');
+	data.addColumn('number', 'Total Enroll');
+	data.addColumn('number', 'Total Renew');
+	data.addColumn('number', 'Total Widthdraw');
+	data.addColumn('number', 'Start');
+	data.addColumn('number', 'Total Start');
+	var hide = new Array(2,3,4,5,6,7,8,9);	// Default: Display only Daily WebSite Viewers(column 1)
 
 	// Build Data Object from JSON
 	for (var i = Index; i < Total; i++) {
@@ -25,6 +30,11 @@ function displayData() {
 					Number(json[i]['enroll_dailycount']), 
 					Number(json[i]['renew_dailycount']),
 					Number(json[i]['withdraw_dailycount']),
+					Number(json[i]['enroll_totalcount']), 
+					Number(json[i]['renew_totalcount']), 
+					Number(json[i]['withdraw_totalcount']),
+					Number(json[i]['start_dailycount']),
+					Number(json[i]['start_totalcount'])
 					]);
 	}
 	var MAX = data.getNumberOfRows();	// Max Index
@@ -34,6 +44,7 @@ function displayData() {
 	var prevButton = document.getElementById('b1');
 	var nextButton = document.getElementById('b2');
 	var changeZoomButton = document.getElementById('b3');
+	var refreshButton = document.getElementById('b4');
 	
 	// Display Options
 	var options = {
@@ -46,33 +57,11 @@ function displayData() {
 			title: 'Date',
 			viewWindow: {min: MAX-SIZE, max: MAX}	// Show Up-to-Date five day's data
 		},
-		vAxes: {
-			0: {
-				title: '# Enrollee',
-			},
-			1: {
-				title: '# Viewers',
-				gridlines: {
-					count:10
-				}
-			}
-		},
-		crosshair: {trigger: 'focus'},
-		series: {
-			0: {color: '#1c91c0', targetAxisIndex: 1},
-			1: {color: '#f4bc06', targetAxisIndex: 0},
-			2: {color: '#6f9654', targetAxisIndex: 0},
-			3: {color: '#f40707', targetAxisIndex: 0}			
-		}
-	}
-	
-	function getNewDataView(){
-		MAX = data.getNumberOfRows();
-		view = new google.visualization.DataView(data);
-		view.hideColumns(hide);
+		crosshair: {trigger: 'focus'}
 	}
 	
 	function loadMore(number) {
+		//console.log("loadMore");
 		for (var i = 0; i <  number; i++) {
 			Index = Index - 1;
 			if (Index >= 0) {
@@ -81,13 +70,19 @@ function displayData() {
 					Number(json[Index]['enroll_dailycount']), 
 					Number(json[Index]['renew_dailycount']),
 					Number(json[Index]['withdraw_dailycount']),
+					Number(json[Index]['enroll_totalcount']), 
+					Number(json[Index]['renew_totalcount']), 
+					Number(json[Index]['withdraw_totalcount']),
+					Number(json[Index]['start_dailycount']),
+					Number(json[Index]['start_totalcount'])
 				]]);
 			}
 		}
-		//getNewDataView();
+		MAX = data.getNumberOfRows();
 	}
 	
 	function drawChart() {
+		//console.log("drawChart");
 		// Disable buttons while the chart is drawing.
 		prevButton.disabled = true;
 		nextButton.disabled = true;
@@ -105,6 +100,7 @@ function displayData() {
 	
 	// Auto-Adjust Drawing Options
 	function reSize(default_size){
+		//console.log("resize");
 		var HEI = document.getElementById('chart_div').offsetHeight;
 		var WID = document.getElementById('chart_div').offsetWidth;
 		var RATIO = WID/HEI;
@@ -116,18 +112,22 @@ function displayData() {
 	}
 
 	// Button functions
-	prevButton.onclick = function() {
+	prevButton.onclick = function moveForward() {
+		//console.log("MoveForward");
 		options.hAxis.viewWindow.min -= 1;
 		options.hAxis.viewWindow.max -= 1;
 		drawChart();
 	}
-	nextButton.onclick = function() {
+	nextButton.onclick = function moveBackward() {
+		//console.log("MoveBackward");
 		options.hAxis.viewWindow.min += 1;
 		options.hAxis.viewWindow.max += 1;
 		drawChart();
 	}
 	var zoomed = false;
-	changeZoomButton.onclick = function() {
+	changeZoomButton.onclick = function showAll() {
+		//console.log("ShowAll");
+		loadMore(Total-MAX);
 		if (zoomed) {
 			options.hAxis.viewWindow.min = MAX-SIZE;
 			options.hAxis.viewWindow.max = MAX;
@@ -136,6 +136,26 @@ function displayData() {
 			options.hAxis.viewWindow.max = MAX;
 		}
 		zoomed = !zoomed;
+		drawChart();
+	}
+	
+	// Add/Hide Data Category and Refresh Display
+	function getNewDataView(){
+		//console.log("getNewDataView");
+		MAX = data.getNumberOfRows();
+		view = new google.visualization.DataView(data);
+		view.hideColumns(hide);
+	}
+	
+	refreshButton.onclick = function selectDisplay() {
+		//console.log("selectDisplay");
+		var cb = document.getElementsByName('display_select');
+		var temp = new Array();
+		for (var i=0; i<cb.length; i++) {
+			if (!(cb[i].checked)) { temp.push(Number(cb[i].value)); }
+		}
+		//console.log(temp);
+		hide = temp;
 		drawChart();
 	}
 	
@@ -188,8 +208,8 @@ function displayData() {
 					options.hAxis.viewWindow.max = MAX;
 				}
 			}
-			console.log(options.hAxis.viewWindow.max);
-			console.log(MAX);
+			//console.log(options.hAxis.viewWindow.max);
+			//console.log(MAX);
 			drawChart();
 		});
 		
