@@ -23,7 +23,6 @@
 		<div id="button_div" align="center">
 			<button type="button" id="b1" >Previous</button>
 			<button type="button" id="b2" disabled="true">Next</button>
-			<button type="button" id="b4">Refresh</button>
 			<button type="button" id="b3">Change Zoom</button>
 		</div>
 		<main id="main" class="site-main" role="main">

@@ -61,6 +61,7 @@ function displayData() {
 		crosshair: {trigger: 'both'}
 	}
 	
+	/* -------------- Draw Chart  -------------- */
 	function drawChart() {
 		// Disable buttons while the chart is drawing.
 		prevButton.disabled = true;
@@ -74,6 +75,8 @@ function displayData() {
 				changeZoomButton.disabled = false;
 			});
 		getNewDataView();
+		console.log(options.hAxis.viewWindow.max);
+		console.log(data.getNumberOfRows());
 		chart.draw(view, options);
 	}
 
@@ -90,16 +93,8 @@ function displayData() {
 		validateIndex();
 		drawChart();
 	}
-	
-	prevButton.onclick = function(){
-		moveForward(1);
-	}
-	nextButton.onclick = function() {
-		moveBackward(1);
-	}
-	
 	var zoomed = false;
-	changeZoomButton.onclick = function showAll() {
+	function showAll() {
 		loadMore(Total-MAX);
 		if (zoomed) {
 			options.hAxis.viewWindow.min = MAX-SIZE;
@@ -112,20 +107,22 @@ function displayData() {
 		drawChart();
 	}
 	
-	refreshButton.onclick = function selectDisplay() {
-		var cb = document.getElementsByName('display_select');
-		var temp = new Array();
-		for (var i=0; i<cb.length; i++) {
-			if (!(cb[i].checked)) { temp.push(Number(cb[i].value)); }
-		}
-		hide = temp;
-		drawChart();
-	}
-	
-	// Mouse Scroll functions (using jQuery_Mouse_Wheel plug in)
-	var EXTENT = 1;
+	/* ------------ jQuery Events ------------ */
 	$(document).ready(function(){
+		//
+		$("#b1").click(function() {
+			moveForward(1);
+		});
+		$("#b2").click(function() {
+			moveBackward(1);
+		});
+		$("#b3").click(function() {
+			showAll();
+		});
+		
+		// Mouse Scroll functions (using jQuery_Mouse_Wheel plug in)
 		$("#chart_div").on('mousewheel', function(event) {
+			var EXTENT = 1;
 			EXTENT = Math.abs(event.deltaY)*4;
 			if (event.deltaY > 0) {	// Scroll up -> Zoom in
 				// Shrink only at left side
@@ -167,7 +164,7 @@ function displayData() {
 			drawChart();
 		});
 		
-		// Mouse Drag functions
+		// Mouse Drag functions -> move Forward/Backward
 		var mouse_X;
 		$("#chart_div").mousedown(function(event) {
 			mouse_X = event.pageX;
@@ -188,6 +185,17 @@ function displayData() {
 					options.hAxis.viewWindow.min += offset;
 				}
 			}
+		});
+		
+		// Checkboxs select functions -> Choose what to display
+		$("input[name=display_select]").click(function() {
+			var cb = document.getElementsByName('display_select');
+			var temp = new Array();
+			for (var i=0; i<cb.length; i++) {
+				if (!(cb[i].checked)) { temp.push(Number(cb[i].value)); }
+			}
+			hide = temp;
+			drawChart();
 		});
 	});
 	
