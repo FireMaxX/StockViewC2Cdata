@@ -7,21 +7,23 @@
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 	<div id="dashboard_div">
 		<div id="chart_div" style="width:95%; height:90%"></div>
-		<div id="check_box_Upper" align="center">
+		<div id="check_box_Upper" class="check_box" align="center">
 			<label><input id="websiteviews" type="checkbox" name="display_select" value = "1" checked="checked" />Website Viewers</label>
 			<label><input id="enroll_dailycount" type="checkbox" name="display_select" value = "2" />Daily Enroll</label>
 			<label><input id="renew_dailycount" type="checkbox" name="display_select" value = "3" />Daily Renew</label>
 			<label><input id="withdraw_dailycount" type="checkbox" name="display_select" value = "4" />Daily Withdraw</label>
 			<label><input id="withdraw_totalcount" type="checkbox" name="display_select" value = "8" />Daily Start</label>
 		</div>
-		<div id="check_box_Lower" align="center">
+		<div id="check_box_Lower" class="check_box" align="center">
 			<label><input id="enroll_totalcount" type="checkbox" name="display_select" value = "5" />Total Enroll</label>
 			<label><input id="renew_totalcount" type="checkbox" name="display_select" value = "6" />Total Renew</label>
 			<label><input id="withdraw_totalcount" type="checkbox" name="display_select" value = "7" />Total Withdraw</label>
 			<label><input id="withdraw_totalcount" type="checkbox" name="display_select" value = "9" />Total Start</label>
 		</div>
+		-->
+		
 		<div id="button_div" align="center">
-			<button type="button" id="b1" >Previous</button>
+			<button type="button" id="b1">Previous</button>
 			<button type="button" id="b2" disabled="true">Next</button>
 			<button type="button" id="b3">Change Zoom</button>
 		</div>
@@ -68,10 +70,20 @@
 	</div><!-- dashboard_div -->
 	
 	<style>
+	body {font-size:100%;}
 	#chart_div
 	{
 		margin-left: auto;
 		margin-right: auto;
+	}
+	.check_box
+	{
+		margin: auto;
+		font-size: 1.5em;
+	}
+	button
+	{
+		font-size: 1.6em;
 	}
 	</style>
 	
