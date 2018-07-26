@@ -16,12 +16,23 @@ function displayData() {
 	data.addColumn('number', 'Enroll');
 	data.addColumn('number', 'Renew');
 	data.addColumn('number', 'Widthdraw');
+	data.addColumn('number', 'Start');
 	data.addColumn('number', 'Total Enroll');
 	data.addColumn('number', 'Total Renew');
 	data.addColumn('number', 'Total Widthdraw');
-	data.addColumn('number', 'Start');
 	data.addColumn('number', 'Total Start');
 	var hide = new Array(2,3,4,5,6,7,8,9);	// Default: Display only Daily WebSite Viewers(column 1)
+	var color = new Array(					// Line Colors pool
+						{color: '20a0ff'}, 
+						{color: 'ff4949'}, 
+						{color: 'fe980f'}, 
+						{color: '13ce66'}, 
+						{color: '990697'}, 
+						{color: 'da547f'}, 
+						{color: '09d4d4'}, 
+						{color: '09e199'}, 
+						{color: '6d0606'}
+					);
 
 	// Build Data Object from JSON
 	for (var i = Index; i < Total; i++) {
@@ -30,10 +41,10 @@ function displayData() {
 					Number(json[i]['enroll_dailycount']), 
 					Number(json[i]['renew_dailycount']),
 					Number(json[i]['withdraw_dailycount']),
+					Number(json[i]['start_dailycount']),
 					Number(json[i]['enroll_totalcount']), 
 					Number(json[i]['renew_totalcount']), 
 					Number(json[i]['withdraw_totalcount']),
-					Number(json[i]['start_dailycount']),
 					Number(json[i]['start_totalcount'])
 					]);
 	}
@@ -52,10 +63,10 @@ function displayData() {
 		legend: {position: 'top'},
 		animation: {
 			duration: 500,
-			easing: 'in'
+			easing: 'inAndOut',
+			startup: true
 		},
 		hAxis: {
-			title: 'Date',
 			viewWindow: {min: MAX-SIZE, max: MAX}	// Display [min, max)
 		},
 		crosshair: {trigger: 'both'}
@@ -75,8 +86,8 @@ function displayData() {
 				changeZoomButton.disabled = false;
 			});
 		getNewDataView();
-		console.log(options.hAxis.viewWindow.max);
-		console.log(data.getNumberOfRows());
+		//console.log(options.hAxis.viewWindow.max);
+		//console.log(data.getNumberOfRows());
 		chart.draw(view, options);
 	}
 
@@ -190,11 +201,22 @@ function displayData() {
 		// Checkboxs select functions -> Choose what to display
 		$("input[name=display_select]").click(function() {
 			var cb = document.getElementsByName('display_select');
+			var color_pool = new Array();
+			var id_Saved = 'websiteviews';
 			var temp = new Array();
-			for (var i=0; i<cb.length; i++) {
-				if (!(cb[i].checked)) { temp.push(Number(cb[i].value)); }
+			for (var i=0; i < cb.length; i++) {
+				cb[i].disabled=false;	// Refresh
+				if (!(cb[i].checked)) { temp.push(Number(cb[i].value)); }	// Hide this column in DataView
+				else { 
+					color_pool.push(color[Number(cb[i].value)-1]);	// Change drawChart() color pool
+					id_Saved=cb[i].id;
+				}
+			}
+			if (color_pool.length == 1){	// Only one line left, disable the switch to prevent Exception
+				document.getElementById(id_Saved).disabled=true;
 			}
 			hide = temp;
+			options.series = color_pool;
 			drawChart();
 		});
 	});

@@ -1,7 +1,7 @@
 <?php /* Data_Display V1.2 Using RedCap API */ ?>
 <?php /* NOTE: Google Chart API loaded at header.php */ ?>
-<link rel="stylesheet" type="text/css" href="css/zzsc.css">
-<link rel="stylesheet" href="css/checkbox.min.css">
+
+<link rel="stylesheet" href="css/checkbox.css">
 <!--Load jQuery and plugins-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="./js/jquery.mousewheel.js"></script>
@@ -9,33 +9,33 @@
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 	<div id="dashboard_div">
 
-		<div id="chart_div" style="width:95%; height:90%"></div>
+		<div id="chart_div" style="width:95%; height:85%"></div>
 
 		<div id="check_box_Upper" class="el-checkbox" align="center">
 			<strong class="tags">Daily:  </strong>
 			<label class="tags">Viewers</label>
-			<label class="el-switch">
-				<input id="websiteviews" type="checkbox" name="display_select" value = "1" checked="checked" />
+			<label class="el-switch el-switch-blue">
+				<input id="websiteviews" type="checkbox" name="display_select" value = "1" checked="checked" disabled="false"/>
 				<span class="el-switch-style"></span>
 			</label>
 			<span class="tags">Enroll</span>
-			<label class="el-switch">
+			<label class="el-switch el-switch-red">
 				<input id="enroll_dailycount" type="checkbox" name="display_select" value = "2" />
 				<span class="el-switch-style"></span>
 			</label>
 			<span class="tags">Renew</span>
-			<label class="el-switch">
+			<label class="el-switch el-switch-orange">
 				<input id="renew_dailycount" type="checkbox" name="display_select" value = "3" />
 				<span class="el-switch-style"></span>
 			</label>
 			<span class="tags">Withdraw</span>
-			<label class="el-switch">
+			<label class="el-switch el-switch-green">
 				<input id="withdraw_dailycount" type="checkbox" name="display_select" value = "4" />
 				<span class="el-switch-style"></span>
 			</label>
 			<span class="tags">Start</span>
-			<label class="el-switch">
-				<input id="withdraw_totalcount" type="checkbox" name="display_select" value = "8" />
+			<label class="el-switch el-switch-purple">
+				<input id="start_dailycount" type="checkbox" name="display_select" value = "5" />
 				<span class="el-switch-style"></span>
 			</label>
 		</div>
@@ -43,31 +43,31 @@
 		<div id="check_box_Lower" class="check_box" align="center">
 			<strong class="tags">Total:  </strong>
 			<span class="tags">Enroll</span>
-			<label class="el-switch">
-				<input id="enroll_totalcount" type="checkbox" name="display_select" value = "5" />
+			<label class="el-switch el-switch-Pink">
+				<input id="enroll_totalcount" type="checkbox" name="display_select" value = "6" />
 				<span class="el-switch-style"></span>
 			</label>
 			<span class="tags">Renew</span>
-			<label class="el-switch">
-				<input id="renew_totalcount" type="checkbox" name="display_select" value = "6" />
+			<label class="el-switch el-switch-indigo">
+				<input id="renew_totalcount" type="checkbox" name="display_select" value = "7" />
 				<span class="el-switch-style"></span>
 			</label>
 			<span class="tags">Withdraw</span>
-			<label class="el-switch">
-				<input id="withdraw_totalcount" type="checkbox" name="display_select" value = "7" />
+			<label class="el-switch el-switch-grass">
+				<input id="withdraw_totalcount" type="checkbox" name="display_select" value = "8" />
 				<span class="el-switch-style"></span>
 			</label>
 			<span class="tags">Start</span>
-			<label class="el-switch">
-				<input id="withdraw_totalcount" type="checkbox" name="display_select" value = "9" />
+			<label class="el-switch el-switch-brown">
+				<input id="start_totalcount" type="checkbox" name="display_select" value = "9" />
 				<span class="el-switch-style"></span>
 			</label>
 		</div>
 		
 		<div id="button_div" align="center">
-			<button type="button" id="b1" class="button blue">Previous</button>
-			<button type="button" id="b2" class="button blue" disabled="true">Next</button>
-			<button type="button" id="b3" class="button blue">Change Zoom</button>
+			<button type="button" id="b1" class="myButton">Previous</button>
+			<button type="button" id="b2" class="myButton" disabled="true">Next</button>
+			<button type="button" id="b3" class="myButton">Change Zoom</button>
 		</div>
 		<main id="main" class="site-main" role="main">
 
@@ -118,15 +118,34 @@
 		margin-left: auto;
 		margin-right: auto;
 	}
-	button
-	{
-		font-size: 1.6em;
-	}
 	.tags
 	{
 		vertical-align: top;
 		line-height: 1.6em;
 	}
+	.myButton {
+		background-color:#1699f7;
+		-moz-border-radius:14px;
+		-webkit-border-radius:14px;
+		border-radius:14px;
+		border:1px solid #f5faf6;
+		display:inline-block;
+		cursor:pointer;
+		color:#ffffff;
+		font-family:Arial;
+		font-size:17px;
+		font-weight:bold;
+		padding:7px 16px;
+		text-decoration:none;
+	}
+	.myButton:hover {
+		background-color:#1985d1;
+	}
+	.myButton:disabled {
+		background-color:#bfcbd9;
+	}
+
+
 	</style>
 	
 
