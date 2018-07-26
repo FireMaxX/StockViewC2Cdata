@@ -7,6 +7,7 @@
 <script src="./js/jquery.mousewheel.js"></script>
 <!--Load Google Chart Support-->
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
 	<div id="dashboard_div">
 
 		<div id="chart_div" style="width:95%; height:85%"></div>
@@ -110,42 +111,5 @@
 
 		</main><!-- .site-main -->
 	</div><!-- dashboard_div -->
-	
-	<style>
-	body {font-size:100%;}
-	#chart_div
-	{
-		margin-left: auto;
-		margin-right: auto;
-	}
-	.tags
-	{
-		vertical-align: top;
-		line-height: 1.6em;
-	}
-	.myButton {
-		background-color:#1699f7;
-		-moz-border-radius:14px;
-		-webkit-border-radius:14px;
-		border-radius:14px;
-		border:1px solid #f5faf6;
-		display:inline-block;
-		cursor:pointer;
-		color:#ffffff;
-		font-family:Arial;
-		font-size:17px;
-		font-weight:bold;
-		padding:7px 16px;
-		text-decoration:none;
-	}
-	.myButton:hover {
-		background-color:#1985d1;
-	}
-	.myButton:disabled {
-		background-color:#bfcbd9;
-	}
-
-
-	</style>
 	
 

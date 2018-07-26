@@ -86,8 +86,6 @@ function displayData() {
 				changeZoomButton.disabled = false;
 			});
 		getNewDataView();
-		//console.log(options.hAxis.viewWindow.max);
-		//console.log(data.getNumberOfRows());
 		chart.draw(view, options);
 	}
 
@@ -264,10 +262,10 @@ function displayData() {
 					Number(json[Index]['enroll_dailycount']), 
 					Number(json[Index]['renew_dailycount']),
 					Number(json[Index]['withdraw_dailycount']),
+					Number(json[Index]['start_dailycount']),
 					Number(json[Index]['enroll_totalcount']), 
 					Number(json[Index]['renew_totalcount']), 
 					Number(json[Index]['withdraw_totalcount']),
-					Number(json[Index]['start_dailycount']),
 					Number(json[Index]['start_totalcount'])
 				]]);
 			}

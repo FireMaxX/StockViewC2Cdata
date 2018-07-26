@@ -1,3 +1,42 @@
+body {
+	font-size:100%;
+	font-family: "Microsoft YaHei","Segoe UI", "Lucida Grande", Helvetica, Arial,sans-serif;
+}
+
+#chart_div
+{
+	margin-left: auto;
+	margin-right: auto;
+}	
+
+.tags
+{
+	vertical-align: top;
+	line-height: 1.6em;
+}
+
+.myButton {
+	background-color:#1699f7;
+	-moz-border-radius:14px;
+	-webkit-border-radius:14px;
+	border-radius:14px;
+	border:1px solid #f5faf6;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:17px;
+	font-weight:bold;
+	padding:7px 16px;
+	text-decoration:none;
+}
+.myButton:hover {
+	background-color:#1985d1;
+}
+.myButton:disabled {
+	background-color:#bfcbd9;
+}	
+
 /* define switch style */
 .el-switch,
 .el-switch-style,
