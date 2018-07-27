@@ -1,13 +1,13 @@
 <?php /* Data_Display V1.2 Using RedCap API */ ?>
 <?php /* NOTE: Google Chart API loaded at header.php */ ?>
 
-<link rel="stylesheet" href="css/checkbox.css">
-<!--Load jQuery and plugins-->
+<!-- Load jQuery and plugins -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="./js/jquery.mousewheel.js"></script>
-<!--Load Google Chart Support-->
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<script type='text/javascript' src="./js/Chart.js"></script>
+<!-- Load Google Chart Support -->
+<script src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="./js/Chart.js"></script>
+<link rel="stylesheet" href="css/checkbox.css"/>
 
 <div id="dashboard_div">	<!-- Interactive Chart Widget -->
 	<div id="top_bar">

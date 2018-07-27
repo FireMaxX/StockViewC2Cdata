@@ -121,6 +121,42 @@ function displayData() {
 		zoomed = !zoomed;
 		drawChart();
 	}
+	function EnLarge(EXTENT) {
+		// Shrink only at left side
+		if (options.hAxis.viewWindow.max == MAX) { 
+			// Determine Shrink Scope
+			if ((options.hAxis.viewWindow.max-(options.hAxis.viewWindow.min+EXTENT)) >= SIZE) {
+				options.hAxis.viewWindow.min += EXTENT;
+			}
+			else if ((options.hAxis.viewWindow.max-(options.hAxis.viewWindow.min+1)) >= SIZE)
+			{
+				options.hAxis.viewWindow.min += 1;
+			}
+		}
+		else if (((options.hAxis.viewWindow.max-EXTENT)-(options.hAxis.viewWindow.min+EXTENT)) >= SIZE) {	// Shrink from both side
+			options.hAxis.viewWindow.min += EXTENT;
+			options.hAxis.viewWindow.max -= EXTENT;
+		}
+		else if (((options.hAxis.viewWindow.max-1)-(options.hAxis.viewWindow.min+1)) >= SIZE){
+			options.hAxis.viewWindow.min += 1;
+			options.hAxis.viewWindow.max -= 1;	
+		}
+	}
+	function ConTract(EXTENT) {
+		if ((MAX < Total) && (options.hAxis.viewWindow.min < EXTENT*2)) {
+			loadMore(EXTENT);
+			options.hAxis.viewWindow.max += EXTENT;
+			options.hAxis.viewWindow.min += EXTENT;
+		}
+
+		if (options.hAxis.viewWindow.max == MAX) {	// Show more on the left of x-axis
+			options.hAxis.viewWindow.min -= EXTENT;
+		}
+		else {	// Show more on both side
+			options.hAxis.viewWindow.min -= EXTENT/2;
+			options.hAxis.viewWindow.max += EXTENT/2;
+		}
+	}
 	
 	/* ------------ jQuery Events ------------ */
 	$(document).ready(function(){
@@ -140,40 +176,10 @@ function displayData() {
 			var EXTENT = 1;
 			EXTENT = Math.abs(event.deltaY)*4;
 			if (event.deltaY > 0) {	// Scroll up -> Zoom in
-				// Shrink only at left side
-				if (options.hAxis.viewWindow.max == MAX) { 
-					// Determine Shrink Scope
-					if ((options.hAxis.viewWindow.max-(options.hAxis.viewWindow.min+EXTENT)) >= SIZE) {
-						options.hAxis.viewWindow.min += EXTENT;
-					}
-					else if ((options.hAxis.viewWindow.max-(options.hAxis.viewWindow.min+1)) >= SIZE)
-					{
-						options.hAxis.viewWindow.min += 1;
-					}
-				}
-				else if (((options.hAxis.viewWindow.max-EXTENT)-(options.hAxis.viewWindow.min+EXTENT)) >= SIZE) {	// Shrink from both side
-					options.hAxis.viewWindow.min += EXTENT;
-					options.hAxis.viewWindow.max -= EXTENT;
-				}
-				else if (((options.hAxis.viewWindow.max-1)-(options.hAxis.viewWindow.min+1)) >= SIZE){
-					options.hAxis.viewWindow.min += 1;
-					options.hAxis.viewWindow.max -= 1;	
-				}
+				EnLarge(EXTENT);
 			}
 			else {	// Scroll down -> Zoom out
-				if ((MAX < Total) && (options.hAxis.viewWindow.min < EXTENT*2)) {
-					loadMore(EXTENT);
-					options.hAxis.viewWindow.max += EXTENT;
-					options.hAxis.viewWindow.min += EXTENT;
-				}
-		
-				if (options.hAxis.viewWindow.max == MAX) {	// Show more on the left of x-axis
-					options.hAxis.viewWindow.min -= EXTENT;
-				}
-				else {	// Show more on both side
-					options.hAxis.viewWindow.min -= EXTENT/2;
-					options.hAxis.viewWindow.max += EXTENT/2;
-				}	
+				ConTract(EXTENT);	
 			}
 			validateIndex();
 			drawChart();
@@ -190,6 +196,47 @@ function displayData() {
 			var offset = Math.round(Math.abs(Math.round(new_X-mouse_X))/(total_X/(SIZE-1)))+1;
 				
 			if (new_X < mouse_X) {
+				moveBackward(offset);
+			}
+			else if (new_X > mouse_X) {
+				moveForward(offset);
+				if ((MAX < Total) && (options.hAxis.viewWindow.min < offset)) {
+					loadMore(offset);
+					options.hAxis.viewWindow.max += offset;
+					options.hAxis.viewWindow.min += offset;
+				}
+			}
+		});
+		// Touch Drag functions
+		var mouse_Y;
+		$("#chart_div").on('touchstart',function(e) {
+			e.preventDefault();
+			e.stopPropagation();	// Prevent Browser Default Response to Touch/Swipe
+			mouse_X = e.originalEvent.changedTouches[0].pageX;
+			mouse_Y = e.originalEvent.changedTouches[0].pageY;
+		});
+		$("#chart_div").on('touchend', function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+			var new_X = e.originalEvent.changedTouches[0].pageX;
+			var new_Y = e.originalEvent.changedTouches[0].pageY;
+			var total_X = document.getElementById('chart_div').offsetWidth;
+			var total_Y = document.getElementById('chart_div').offsetHeight;
+			var offset = Math.round(Math.abs(Math.round(new_X-mouse_X))/(total_X/(SIZE-1)))+1;
+			var offsetY = Math.round(new_Y-mouse_Y);
+			var ratioY = Math.abs(total_Y/offsetY);
+			
+			if (ratioY <= 2) {	// Resize
+				if (offsetY > 0) {// Swipe Down
+					ConTract(Math.round(2*ratioY));
+				}
+				else {
+					EnLarge(Math.round(2*ratioY));
+				}
+				validateIndex();
+				drawChart();
+			}
+			else if (new_X < mouse_X) {
 				moveBackward(offset);
 			}
 			else if (new_X > mouse_X) {
