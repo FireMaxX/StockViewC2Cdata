@@ -60,7 +60,10 @@ function displayData() {
 	// Display Options
 	var options = {
 		title: 'C2C WebSite Viwer Data',
-		legend: {position: 'top'},
+		chartArea: {
+			left: 5
+		},
+		legend: { position: 'top' },
 		animation: {
 			duration: 500,
 			easing: 'inAndOut',

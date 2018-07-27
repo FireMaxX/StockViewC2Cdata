@@ -1,13 +1,44 @@
-body {
+html, body {
 	font-size:100%;
 	font-family: "Microsoft YaHei","Segoe UI", "Lucida Grande", Helvetica, Arial,sans-serif;
+	width: 100%;
+	height: 100%;
 }
-
-#chart_div
+#left_bar
+{
+	position: absolute;
+	width: 200px;
+	height: 90%;
+}
+#right_bar
+{
+	position: absolute;
+	top: 0;
+	left: 200px;
+	right: 0;
+	height: 90%;
+}
+#top_bar
 {
 	margin-left: auto;
 	margin-right: auto;
-}	
+	width: 100%;
+	height: 90%;
+}
+#bottom_bar
+{
+	width: 100%;
+	height: 10%;
+}
+
+#check_box_div
+{
+	border: 0;
+	margin: 0;
+	padding: 0;
+	position: absolute;
+	top: 30%;
+}
 
 .tags
 {
