@@ -1,8 +1,8 @@
 html, body {
 	font-size:100%;
 	font-family: "Microsoft YaHei","Segoe UI", "Lucida Grande", Helvetica, Arial,sans-serif;
-	width: 100%;
-	height: 100%;
+	width: 95%;
+	height: 95%;
 }
 #dashboard_div	/* Widget Size, make changes here */
 {
@@ -55,7 +55,7 @@ html, body {
 	width: 100%;
 	justify-content: center; display: -webkit-flex;
 }
-.el-checkbox { margin: 8px;}
+/*.el-checkbox { margin: 8px;}*/
 /* ... End of Elements Size Definition */
 .tags
 {

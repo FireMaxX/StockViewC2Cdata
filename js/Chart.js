@@ -62,7 +62,7 @@ function displayData() {
 		title: 'C2C WebSite Viwer Data',
 		chartArea: {
 			right: '15%',
-			top: '13%',
+			top: '10%',
 			width: '80%',
 			height: '80%',
 		},
@@ -243,6 +243,7 @@ function displayData() {
 		MAX = data.getNumberOfRows();
 		view = new google.visualization.DataView(data);
 		view.hideColumns(hide);
+		view.setRows(data.getSortedRows({column: 0, desc: false}));
 	}
 	
 	// Ensure Index within Valid Range
