@@ -61,7 +61,10 @@ function displayData() {
 	var options = {
 		title: 'C2C WebSite Viwer Data',
 		chartArea: {
-			left: 5
+			right: '15%',
+			top: '13%',
+			width: '80%',
+			height: '80%',
 		},
 		legend: { position: 'top' },
 		animation: {

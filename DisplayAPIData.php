@@ -12,70 +12,80 @@
 <div id="dashboard_div">	<!-- Interactive Chart Widget -->
 	<div id="top_bar">
 		<div id="left_bar">
-			<div id="check_box_div" align="right">
-				<div class="el-checkbox">
-					<span class="tags">Viewers</span>
-					<label class="el-switch el-switch-blue">
-						<input id="websiteviews" type="checkbox" name="display_select" value = "1" checked="checked" disabled="false"/>
-						<span class="el-switch-style"></span>
-					</label>
+			<div id="check_box_div">
+				<div class="checkbox_group_title">
+					<strong>Daily</strong>
 				</div>
-				<div class="el-checkbox">
-					<span class="tags">Daily Enroll</span>
-					<label class="el-switch el-switch-red">
-						<input id="enroll_dailycount" type="checkbox" name="display_select" value = "2" />
-						<span class="el-switch-style"></span>
-					</label>
-				</div>	
-				<div class="el-checkbox">
-					<span class="tags">Daily Renew</span>
-					<label class="el-switch el-switch-orange">
-						<input id="renew_dailycount" type="checkbox" name="display_select" value = "3" />
-						<span class="el-switch-style"></span>
-					</label>
+				<div name="Daily" class="checkbox_group" align="right">
+					<div class="el-checkbox">
+						<span class="tags">Viewers</span>
+						<label class="el-switch el-switch-blue">
+							<input id="websiteviews" type="checkbox" name="display_select" value = "1" checked="checked" disabled="false"/>
+							<span class="el-switch-style"></span>
+						</label>
+					</div>
+					<div class="el-checkbox">
+						<span class="tags">Enroll</span>
+						<label class="el-switch el-switch-red">
+							<input id="enroll_dailycount" type="checkbox" name="display_select" value = "2" />
+							<span class="el-switch-style"></span>
+						</label>
+					</div>				
+					<div class="el-checkbox">
+						<span class="tags">Renew</span>
+						<label class="el-switch el-switch-orange">
+							<input id="renew_dailycount" type="checkbox" name="display_select" value = "3" />
+							<span class="el-switch-style"></span>
+						</label>
+					</div>
+					<div class="el-checkbox">
+						<span class="tags">Withdraw</span>
+						<label class="el-switch el-switch-green">
+							<input id="withdraw_dailycount" type="checkbox" name="display_select" value = "4" />
+							<span class="el-switch-style"></span>
+						</label>
+					</div>
+					<div class="el-checkbox">
+						<span class="tags">Start</span>
+						<label class="el-switch el-switch-purple">
+							<input id="start_dailycount" type="checkbox" name="display_select" value = "5" />
+							<span class="el-switch-style"></span>
+						</label>
+					</div>
 				</div>
-				<div class="el-checkbox">
-					<span class="tags">Daily Withdraw</span>
-					<label class="el-switch el-switch-green">
-						<input id="withdraw_dailycount" type="checkbox" name="display_select" value = "4" />
-						<span class="el-switch-style"></span>
-					</label>
+				<div class="checkbox_group_title">
+					<strong>Total</strong>
 				</div>
-				<div class="el-checkbox">
-					<span class="tags">Daily Start</span>
-					<label class="el-switch el-switch-purple">
-						<input id="start_dailycount" type="checkbox" name="display_select" value = "5" />
-						<span class="el-switch-style"></span>
-					</label>
+				<div name="Total" class="checkbox_group" align="right">	
+					<div class="el-checkbox">
+						<span class="tags">Enroll</span>
+						<label class="el-switch el-switch-Pink">
+							<input id="enroll_totalcount" type="checkbox" name="display_select" value = "6" />
+							<span class="el-switch-style"></span>
+						</label>
+					</div>
+					<div class="el-checkbox">
+						<span class="tags">Renew</span>
+						<label class="el-switch el-switch-indigo">
+							<input id="renew_totalcount" type="checkbox" name="display_select" value = "7" />
+							<span class="el-switch-style"></span>
+						</label>
+					</div>
+					<div class="el-checkbox">
+						<span class="tags">Withdraw</span>
+						<label class="el-switch el-switch-grass">
+							<input id="withdraw_totalcount" type="checkbox" name="display_select" value = "8" />
+							<span class="el-switch-style"></span>
+						</label>
+					</div>
+					<div class="el-checkbox">
+						<span class="tags">Start</span>
+						<label class="el-switch el-switch-brown">
+							<input id="start_totalcount" type="checkbox" name="display_select" value = "9" />
+							<span class="el-switch-style"></span>
+						</label>
+					</div>
 				</div>
-				<div class="el-checkbox">
-					<span class="tags">Total Enroll</span>
-					<label class="el-switch el-switch-Pink">
-						<input id="enroll_totalcount" type="checkbox" name="display_select" value = "6" />
-						<span class="el-switch-style"></span>
-					</label>
-				</div>
-				<div class="el-checkbox">
-					<span class="tags">Total Renew</span>
-					<label class="el-switch el-switch-indigo">
-						<input id="renew_totalcount" type="checkbox" name="display_select" value = "7" />
-						<span class="el-switch-style"></span>
-					</label>
-				</div>
-				<div class="el-checkbox">
-					<span class="tags">Total Withdraw</span>
-					<label class="el-switch el-switch-grass">
-						<input id="withdraw_totalcount" type="checkbox" name="display_select" value = "8" />
-						<span class="el-switch-style"></span>
-					</label>
-				</div>
-				<div class="el-checkbox">
-					<span class="tags">Total Start</span>
-					<label class="el-switch el-switch-brown">
-						<input id="start_totalcount" type="checkbox" name="display_select" value = "9" />
-						<span class="el-switch-style"></span>
-					</label>
-				</div>		
 			</div>	<!-- End of Check_Boxs Div -->
 		</div>	<!-- End of Left_Bar -->
 
