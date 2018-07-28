@@ -174,7 +174,12 @@ function displayData() {
 		// Mouse Scroll functions (using jQuery_Mouse_Wheel plug in)
 		$("#chart_div").on('mousewheel', function(event) {
 			var EXTENT = 1;
-			EXTENT = Math.abs(event.deltaY)*4;
+			var MULTIPLE = Math.round(Math.abs(event.deltaY));
+			EXTENT = Math.pow(2,MULTIPLE);
+			if (EXTENT > 256) {
+				EXTENT = 256;
+			}
+			console.log(EXTENT);
 			if (event.deltaY > 0) {	// Scroll up -> Zoom in
 				EnLarge(EXTENT);
 			}
@@ -228,10 +233,10 @@ function displayData() {
 			
 			if (ratioY <= 2) {	// Resize
 				if (offsetY > 0) {// Swipe Down
-					ConTract(Math.round(2*ratioY));
+					ConTract(8);
 				}
 				else {
-					EnLarge(Math.round(2*ratioY));
+					EnLarge(8);
 				}
 				validateIndex();
 				drawChart();
